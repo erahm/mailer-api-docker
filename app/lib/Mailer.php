@@ -1,11 +1,11 @@
 <?php
-use models\Message;
+namespace app\lib;
+use app\models\Message;
 
 class Mailer {
 
     public function sendMail( $data ) {
-        $message = new Message;
-        $this->buildMessage( $message, $data );
+        $message = $this->buildMessage( new Message, $data );
     }
 
     protected buildMessage( $message, array $data ) {

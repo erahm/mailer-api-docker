@@ -1,5 +1,6 @@
 <?php
 require 'vendor/autoload.php';
+use app\lib\Mailer;
 
 $app = new \Slim\App;
 
