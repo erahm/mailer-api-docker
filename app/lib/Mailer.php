@@ -1,37 +1,18 @@
 <?php
 namespace app\lib;
-use app\models\Message;
+use app\models\MessageFactory;
 
 class Mailer {
 
-    public function sendMail( $data ) {
-        $message = $this->buildMessage( new Message, $data );
-    }
+    public function sendMail( array $data ) {
+        $message = MessageFactory::messageFromArray( $data );
 
-    protected buildMessage( $message, array $data ) {
-        foreach ( $data as $key => $value ) {
-            switch( $key ) {
-            case "to":
-            case "cc":
-            case "bcc":
-                    if ( is_array( $value ) ) {
-                        $message->$key = $value;
-                    }
-                    else {
-                        array_push( $message->$key, $value );
-                    }
-                    break;
-            case "from":
-            case "subject":
-            case "body":
-                $message->$key = $value;
-                break;
-            case "content-type":
-                $message->contentType = $value;
-                break;
-            default:
-                break;
-            }
+        if ( is_array( $message->to ) ) {
+            $to = implode( ',', $message->to );
         }
+        else {
+            $to = $message->to;
+        }
+
+        return mail( $to, $message->subject, $message->body, $message->getHeaders() );
     }
-}
